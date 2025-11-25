@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beranda - PayPay</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* 🌿 === Variabel Tema Hijau (Asli) === 🌿 */
+        :root {
+            --primary-green: #28a745; 
+            --light-green: #e6f7eb;  
+            --dark-green: #1e7e34; 
+            --accent-gold: #FFC107; 
+
+            --bg-light: #ffffff; 
+            --bg-page: #F7F7F7; 
+            --text-dark: #333333; 
+            --text-muted: #888; 
+            --border-color: #EFEFEF; 
+            --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05); 
+            --shadow-float: 0 4px 12px rgba(0, 0, 0, 0.15); 
+        }
+
+        /* DEFINISI KEYFRAMES */
+        @keyframes slideDownFadeIn {
+            0% { transform: translateY(-50px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes slideUpFadeOut {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(30px); opacity: 0; }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes fadeOut {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+
+        /* === GLOBAL STYLING === */
+        body { 
+            font-family: 'Poppins', sans-serif; background-color: var(--bg-page); margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; color: var(--text-dark); 
+        }
+        .app-container { 
+            width: 100%; max-width: 450px; margin: 0 auto; background-color: var(--bg-light); 
+            box-shadow: none; flex-grow: 1; display: flex; 
+            flex-direction: column; 
+        }
+        .header { 
+            background: var(--bg-light); padding: 15px 20px; position: sticky; top: 0;
+            z-index: 10; box-shadow: var(--shadow-subtle); border-bottom: 1px solid var(--border-color);
+        }
+        .logo-text { 
+            font-size: 22px; font-weight: 700; text-align: left; margin: 0; color: var(--primary-green); 
+        }
+        .main-content { 
+            padding: 0 20px; 
+            flex-grow: 1; 
+            margin-top: 20px; 
+            /* FIX: Tambahkan padding lebih untuk memberi ruang bagi navbar fixed */
+            padding-bottom: 100px; 
+            z-index: 2; 
+        }
+
+        /* --- SLIDER --- */
+        .image-slider-container {
+            position: relative; margin-bottom: 25px; overflow: hidden; border-radius: 11px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); 
+        }
+        .image-slider { 
+            display: flex; 
+            width: 100%; 
+            height: 150px; 
+        }
+        .image-slide-item { min-width: 100%; flex-shrink: 0; position: relative; height: 100%;}
+        .image-slide-item img { width: 100%; height: 100%; object-fit: cover; border-radius: 10px; display: block; }
+        .slider-dots { position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 5; }
+        .dot { height: 8px; width: 8px; background-color: rgba(255, 255, 255, 0.7); border: 1px solid rgba(0, 0, 0, 0.1); border-radius: 50%; display: inline-block; margin: 0 4px; cursor: pointer; transition: background-color 0.3s, transform 0.2s; }
+        .dot.active { background-color: var(--primary-green); transform: scale(1.2); border-color: #fff; }
+
+        /* --- MENU AKSI (Gaya Asli) --- */
+        .action-menu { display: flex; justify-content: space-around; margin-bottom: 30px; background: var(--light-green); border: 1px solid var(--primary-green); padding: 15px 10px; border-radius: 10px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+        .action-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; color: var(--text-dark); font-size: 11px; font-weight: 500; width: 25%; text-align: center; transition: transform 0.2s; }
+        .action-icon { width: 45px; height: 45px; background-color: var(--bg-light); border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 18px; color: var(--primary-green); margin-bottom: 5px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+
+        /* --- Navigasi Bawah (Gaya Asli) --- */
+        .bottom-nav { display:flex; justify-content:space-around; align-items:center; height:65px; padding: 5px 10px; box-sizing: border-box; background-color: var(--light-green); border: 1px solid var(--primary-green); border-radius: 10px; box-shadow: var(--shadow-float); position:fixed; bottom:20px; width:calc(100% - 40px); max-width:410px; left:50%; transform:translateX(-50%); z-index:100; } 
+        .nav-item { display:flex; flex-direction:column; align-items:center; text-decoration:none; color: #555; font-size:10px; font-weight:500; padding:5px; transition:color 0.3s; }
+        .nav-item i { font-size:22px; margin-bottom:3px; }
+        .nav-item.active { color: var(--primary-green); font-weight:600; }
+        
+        /* 💎 === GAYA KONTEN TENTANG KAMI ELEGAN (KOTAK CARD) === 💎 */
+        .about-section {
+            padding: 0; 
+        }
+        
+        /* KOTAK CARD untuk teks utama */
+        .about-card {
+            background-color: var(--bg-light); 
+            padding: 20px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08); 
+            margin-bottom: 25px; 
+            border: 1px solid var(--border-color);
+        }
+
+        /* Judul Section Lebih Tegas dan Berkilau (di dalam kotak) */
+        .about-card h2 { 
+            color: var(--dark-green);
+            font-size: 20px;
+            font-weight: 800; 
+            margin-bottom: 15px;
+            margin-top: 5px; 
+            border-bottom: 3px solid var(--primary-green);
+            display: inline-block;
+            padding-bottom: 8px;
+        }
+
+        .about-card p { 
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 18px;
+            color: var(--text-dark);
+            text-align: justify;
+        }
+        
+        .about-card ul { 
+            list-style: none;
+            padding-left: 0;
+            margin-bottom: 25px;
+        }
+        
+        /* Gaya Checklist Elegan (di dalam kotak) */
+        .about-card ul li { 
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+            position: relative;
+            padding-left: 30px; 
+            border-bottom: 1px dashed rgba(0, 0, 0, 0.05); 
+            padding-bottom: 5px;
+        }
+        
+        .about-card ul li::before { 
+            content: "\f00c"; 
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: var(--accent-gold); 
+            background-color: var(--primary-green);
+            border-radius: 50%;
+            padding: 3px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            font-size: 14px;
+        }
+        
+        /* Kotak Kontak Premium (Tetap penuh) */
+        .contact-box {
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            color: white; 
+            text-align: center;
+        }
+        .contact-box h2 {
+            color: white;
+            border-bottom: 2px solid var(--accent-gold); 
+            display: inline-block;
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+        }
+        .contact-box p {
+            margin: 5px 0;
+            font-size: 14px;
+            color: #f0f0f0;
+        }
+        .contact-box a {
+            color: var(--accent-gold); 
+            font-weight: 700; 
+            text-decoration: none;
+            transition: color 0.3s;
+            font-size: 15px;
+        }
+        .contact-box a:hover {
+            color: #fff;
+        }
+
+        /* 💥 MODAL DAN POPUP (Gaya Asli) 💥 */
+        .popup-wrapper, .modal-overlay {
+          position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+          background: rgba(0,0,0,0.7); 
+          display: none; justify-content: center; align-items: center;
+          z-index: 9999;
+          padding: 0 20px; 
+          box-sizing: border-box;
+        }
+
+        .popup-wrapper.show, .modal-overlay.show {
+            display: flex; 
+            animation: fadeIn 0.5s forwards; 
+        }
+        .popup-wrapper.hide, .modal-overlay.hide {
+             animation: fadeOut 0.5s forwards; 
+        }
+
+        .popup-box, .modal-content {
+          background: linear-gradient(135deg, #f0fdf4, #d1ffd7); 
+          width: 100%; 
+          max-width: 380px; 
+          color: var(--text-dark);
+          padding: 30px 25px; 
+          border-radius: 20px; 
+          text-align: center;
+          box-shadow: 0 15px 30px rgba(0,0,0,0.25); 
+          border: 2px solid var(--primary-green); 
+          transform: translateY(0); 
+          opacity: 0; 
+          position: relative; 
+          overflow: hidden; 
+        }
+
+        .popup-box h2 { margin-top: 0; font-size: 24px; font-weight: 800; color: var(--dark-green); margin-bottom: 15px; position: relative; z-index: 1; }
+        .popup-box h2 i { margin-right: 10px; color: var(--primary-green); }
+        .popup-box p { font-size: 15px; color: #555; margin-bottom: 25px; line-height: 1.6; position: relative; z-index: 1; }
+        .popup-btn { font-family: 'Poppins', sans-serif; margin-top: 15px; padding: 12px 25px; background: linear-gradient(to right, var(--primary-green), #4CAF50); color: #fff; font-size: 16px; font-weight: 700; border: none; border-radius: 12px; cursor: pointer; width: 80%; max-width: 250px; transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4); position: relative; z-index: 1; }
+        
+        .popup-wrapper.show .popup-box, .modal-overlay.show .modal-content {
+            animation: slideDownFadeIn 0.7s ease-out forwards; 
+        }
+        .popup-wrapper.hide .popup-box, .modal-overlay.hide .modal-content {
+            animation: slideUpFadeOut 0.5s ease-in forwards;
+        }
+        
+    </style>
+
+</head>
+<body>
+    
+<div id="welcomePopup" class="popup-wrapper">
+  <div class="popup-box">
+    <h2>Raih Kesuksesan Finansialmu!</h2>
+    <p>Selamat datang di PayPay! Mari wujudkan tujuan keuangan Anda dengan berbagai pilihan investasi terbaik. Mulai perjalanan Anda hari ini dan saksikan aset Anda bertumbuh bersama kami.</p>
+    <button id="closePopup" class="popup-btn">Mulai Sekarang</button>
+  </div>
+</div>
+
+<div class="app-container" id="appContainer">
+    <header class="header">
+        <h1 class="logo-text">Selamat Datang, Di PayPay</h1>
+    </header>
+    
+    <div class="main-content">
+        
+        <div style="display: none;">
+            <p class="balance-amount balance-deposito">Rp 0</p>
+            <p class="balance-amount balance-penarikan">Rp 0</p>
+        </div>
+        
+        <div class="image-slider-container">
+            <div class="image-slider" id="imageSlider">
+                
+                <div class="image-slide-item">
+                    <img src="banner1.jpg" alt="Banner 1">
+                </div>
+                
+                <div class="image-slide-item">
+                    <img src="banner2.jpg" alt="Banner 2">
+                </div>
+                
+                <div class="image-slide-item">
+                    <img src="banner3.jpg" alt="Banner 3">
+                </div>
+
+            </div>
+            <div class="slider-dots" id="sliderDots">
+                <span class="dot active"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+            </div>
+        </div>
+        
+        <div class="action-menu">
+            <a href="deposit.html" class="action-item">
+                <div class="action-icon"><i class="fas fa-arrow-down"></i></div>
+               Isi Saldo
+            </a>
+            <a href="tarik.html" class="action-item">
+                <div class="action-icon"><i class="fas fa-arrow-up"></i></div>
+                Tarik Saldo
+            </a>
+            <a href="produk.html" class="action-item"> 
+                <div class="action-icon"><i class="fas fa-chart-line"></i></div>
+                Investasi
+            </a>
+            <a href="layanan.html" class="action-item">
+                <div class="action-icon"><i class="fas fa-paper-plane"></i></div>
+                Layanan
+            </a>
+        </div>
+        
+        <section class="about-section">
+            <div class="about-card">
+                <h2>Tentang Kami</h2>
+                <p>PayPay adalah platform investasi digital terpercaya yang hadir untuk memberikan kemudahan dan kenyamanan dalam menumbuhkan modal Anda. Kami memahami bahwa setiap investor memiliki tujuan dan kemampuan yang berbeda-beda, oleh karena itu kami menyediakan berbagai paket investasi yang fleksibel, transparan, dan sesuai dengan kebutuhan Anda.</p>
+                
+                <p>Dengan sistem otomatis kami, setiap profit harian akan dihitung secara tepat dan ditambahkan ke saldo penarikan Anda tanpa perlu repot. Hal ini memastikan pengalaman investasi yang nyaman dan aman, sehingga Anda bisa fokus memantau pertumbuhan investasi tanpa khawatir akan hal-hal teknis.</p>
+                
+                <p>Platform PayPay dilengkapi dengan dashboard pribadi yang memungkinkan Anda memantau semua investasi, melihat riwayat keuntungan, dan mempelajari detail paket investasi secara lengkap. Setiap transaksi, baik pembelian paket maupun pencairan profit, terekam secara transparan sehingga Anda dapat mengecek semua data kapan saja.</p>
+
+                <h2>Keunggulan PayPay</h2>
+                <ul>
+                    <li>Proses investasi cepat, mudah, dan aman</li>
+                    <li>Profit harian otomatis masuk ke saldo penarikan setiap 24 jam</li>
+                    <li>Transparansi penuh dalam setiap paket investasi</li>
+                    <li>Monitoring real-time melalui dashboard pribadi</li>
+                    <li>Layanan pelanggan siap membantu kapan saja</li>
+                    <li>Beragam paket investasi yang fleksibel untuk semua anggota</li>
+                    <li>Riwayat keuntungan dan laporan transaksi lengkap</li>
+                </ul>
+
+                <p>Kami berkomitmen untuk terus meningkatkan platform agar semakin bermanfaat bagi setiap investor. Bergabunglah dengan PayPay dan mulai perjalanan investasi Anda dengan langkah yang tepat. Kami percaya bahwa investasi seharusnya tidak rumit, dan setiap anggota berhak merasakan pengalaman menumbuhkan modal yang mudah, aman, dan menguntungkan.</p>
+            </div>
+            
+            <div class="contact-box">
+                <h2>Layanan Pelanggan</h2>
+                <p>Jika Anda memiliki pertanyaan atau membutuhkan bantuan, tim layanan pelanggan kami siap membantu Anda kapan saja.</p>
+                <p>Hubungi melalui: 
+                    <a href="layanan.html" target="_blank">
+                        layanan
+                    </a>
+                </p>
+            </div>
+        </section>
+        
+        </div> <nav class="bottom-nav">
+        <a href="beranda.html" class="nav-item active"><i class="fas fa-home"></i>Beranda</a>
+        <a href="produk.html" class="nav-item"><i class="fas fa-box-open"></i>Produk</a> 
+        <a href="tim.html" class="nav-item"><i class="fas fa-users"></i>Tim</a>
+        <a href="profil.html" class="nav-item"><i class="fas fa-user"></i>Profil</a>
+    </nav>
+</div>
+
+<script>
+// Fungsi helper untuk memformat angka menjadi Rupiah
+const formatRupiah = (number) => {
+    const num = Number(number);
+    if (isNaN(num)) return "Rp 0";
+    return "Rp " + num.toLocaleString("id-ID");
+};
+
+document.addEventListener("DOMContentLoaded", () => {
+    
+    // ===================================
+    // 💥 IMAGE SLIDER LOGIC 💥 
+    // ===================================
+    const slider = document.getElementById('imageSlider');
+    let slides = document.querySelectorAll('.image-slide-item');
+    const dots = document.querySelectorAll('.dot');
+    const originalSlideCount = slides.length;
+    let currentSlide = 0; 
+    let slideInterval;
+    const intervalTime = 4000; 
+    const transitionDuration = 500; 
+
+    if (slides.length > 0) {
+        const firstSlide = slides[0];
+        const clone = firstSlide.cloneNode(true); 
+        clone.classList.add('clone');
+        slider.appendChild(clone);
+    }
+    
+    slides = document.querySelectorAll('.image-slide-item');
+
+    function updateSlider(isSmooth = true) {
+        if (isSmooth) {
+            slider.style.transition = `transform ${transitionDuration / 1000}s ease-in-out`;
+        } else {
+            slider.style.transition = 'none';
+        }
+
+        const shift = -currentSlide * 100;
+        slider.style.transform = `translateX(${shift}%)`;
+
+        dots.forEach((dot, index) => {
+            dot.classList.remove('active');
+        });
+        
+        const activeDotIndex = currentSlide % originalSlideCount;
+        if (dots[activeDotIndex]) {
+            dots[activeDotIndex].classList.add('active');
+        }
+    }
+
+    function nextSlide() {
+        currentSlide++;
+        updateSlider();
+
+        if (currentSlide === originalSlideCount) {
+            setTimeout(() => {
+                currentSlide = 0;
+                updateSlider(false); 
+            }, transitionDuration); 
+            
+            setTimeout(() => {
+                slider.style.transition = `transform ${transitionDuration / 1000}s ease-in-out`;
+            }, transitionDuration + 50); 
+        }
+    }
+
+    function startSlider() {
+        if (originalSlideCount > 1) { 
+            clearInterval(slideInterval);
+            slideInterval = setInterval(nextSlide, intervalTime);
+        }
+    }
+
+    function goToSlide(index) {
+        currentSlide = index;
+        updateSlider();
+        startSlider(); 
+    }
+
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+            goToSlide(index);
+        });
+    });
+
+    updateSlider(); 
+    startSlider();
+    
+    // ===================================
+    // 🌿 LOGIC APLIKASI UTAMA (DATA SALDO) 
+    // ===================================
+    
+    const balanceDepoEl = document.querySelector(".balance-deposito");
+    const balanceTarikEl = document.querySelector(".balance-penarikan");
+
+    let activeUser = JSON.parse(localStorage.getItem("activeUser"));
+
+    if (!activeUser) {
+        activeUser = { phone: "08123456789", balance: 500000, earning: 0, currentInvestments: [] };
+    }
+    
+    activeUser.balance = Number(activeUser.balance || 0);
+    activeUser.earning = Number(activeUser.earning || 0);
+    if (!activeUser.currentInvestments) activeUser.currentInvestments = [];
+    
+    const updateBalanceDisplay = () => {
+        if (balanceDepoEl && balanceTarikEl) {
+            balanceDepoEl.textContent = formatRupiah(activeUser.balance);
+            balanceTarikEl.textContent = formatRupiah(activeUser.earning);
+        }
+    };
+    
+    // ===================================
+    // 💥 POPUP WELCOME LOGIC (SELALU MUNCUL) 💥 
+    // ===================================
+    const popup = document.getElementById("welcomePopup");
+
+    const showPopup = () => {
+        popup.classList.remove('hide');
+        popup.classList.add('show');
+    };
+
+    const hidePopup = () => {
+        popup.classList.remove('show');
+        popup.classList.add('hide');
+
+        setTimeout(() => {
+            popup.classList.remove('hide');
+        }, 700);
+    };
+
+    // LOGIC: Panggil showPopup() secara langsung agar selalu muncul
+    showPopup(); 
+
+    const closePopupBtn = document.getElementById("closePopup");
+    closePopupBtn.addEventListener("click", hidePopup);
+
+    // Tampilkan saldo saat load
+    updateBalanceDisplay();
+});
+</script>
+</body>
+</html>

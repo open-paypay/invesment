@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catatan Keuntungan - Indoreal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+<style>
+    /* 🌿 === Variabel Tema HIJAU PUTIH (Minimalis Konsisten) === 🌿 */
+    :root {
+        --primary-green: #28a745; 
+        --dark-green: #1e7e34; 
+        --light-green: #e6f7eb; 
+        --bg-light: #ffffff; 
+        --bg-page: #F7F7F7; 
+        --text-dark: #333333; 
+        --text-muted: #888; 
+        --border-color: #EFEFEF; 
+        --shadow-subtle: 0 1px 3px rgba(0, 0, 0, 0.05);
+        --shadow-deep: 0 6px 15px rgba(40, 167, 69, 0.25);
+        --profit-color: var(--primary-green);
+        --transition-speed: 0.1s; 
+    }
+    
+    /* Keyframes Kilauan (digunakan di card ringkasan) */
+    @keyframes shine {
+        0% { left: -130%; }
+        100% { left: 130%; }
+    }
+
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: var(--bg-page);
+        margin: 0; padding: 0; min-height: 100vh;
+        display: flex; flex-direction: column; color: var(--text-dark);
+    }
+    .app-container {
+        width: 100%; max-width: 450px;
+        margin: 0 auto; background-color: var(--bg-light);
+        box-shadow: none;
+        flex-grow: 1; display: flex; flex-direction: column; position: relative;
+    }
+    .main-content { padding: 20px; flex-grow: 1; }
+
+    /* === HEADER (Gaya Hijau Putih) === */
+    .profit-header {
+        background: var(--bg-light); 
+        color: var(--text-dark); 
+        padding: 18px 20px; 
+        display: flex; 
+        align-items: center; 
+        position: sticky; 
+        top: 0; 
+        z-index: 10;
+        box-shadow: var(--shadow-subtle);
+        border-bottom: 1px solid var(--border-color);
+    }
+    .profit-header h2 {
+        font-size: 20px;
+        font-weight: 700;
+        margin: 0 auto;
+        flex-grow: 1;
+        text-align: center;
+        color: var(--dark-green);
+    }
+    .back-button {
+        background: none;
+        border: none;
+        color: var(--text-dark);
+        font-size: 18px;
+        cursor: pointer;
+        position: absolute;
+        left: 20px;
+        padding: 0;
+    }
+
+    /* === TOTAL SUMMARY CARD (Hijau Muda dengan Shadow) === */
+    .total-summary-card {
+        background: var(--light-green); /* Hijau Muda */
+        color: var(--text-dark);
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: var(--shadow-deep); /* Shadow Hijau */
+        border: 1px solid var(--primary-green);
+        margin-bottom: 30px;
+        text-align: center;
+        position: relative; /* Penting untuk kilauan */
+        overflow: hidden;
+        z-index: 1;
+    }
+    
+    .total-summary-card::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -130%; 
+        width: 30%; 
+        height: 100%;
+        background: rgba(255, 255, 255, 0.2); 
+        transform: skewX(-20deg); 
+        z-index: 2; 
+        animation: shine 4s linear infinite 0.5s; 
+    }
+    
+    .total-summary-card .label { 
+        font-size: 14px; 
+        margin-bottom: 5px; 
+        font-weight: 500; 
+        color: var(--text-muted); 
+        z-index: 3;
+        position: relative;
+    }
+    .total-summary-card .amount { 
+        font-size: 34px; 
+        font-weight: 800; 
+        margin: 0 0 15px 0;
+        color: var(--dark-green);
+        z-index: 3;
+        position: relative;
+    }
+    .daily-summary {
+        display: flex;
+        justify-content: space-around;
+        border-top: 1px dashed var(--primary-green); /* Garis dashed */
+        padding-top: 15px;
+        z-index: 3;
+        position: relative;
+    }
+    .daily-item h4 { 
+        font-size: 12px; 
+        margin:0; 
+        font-weight: 500; 
+        color: var(--text-muted); 
+    }
+    .daily-item p { 
+        font-size: 16px; 
+        margin:5px 0 0 0; 
+        font-weight:700; 
+        color: var(--dark-green); 
+    }
+
+    /* LIST TITLE */
+    .list-title {
+        font-size: 18px; 
+        font-weight: 700; 
+        color: var(--text-dark); 
+        margin-bottom: 15px;
+        border-left: 4px solid var(--primary-green); /* Aksen Hijau */
+        padding-left: 10px;
+    }
+
+    /* RECORD ITEM */
+    .record-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+        border-bottom: 1px solid var(--border-color); /* Border ringan */
+    }
+    .record-item:last-child { border-bottom: none; }
+    
+    .item-details h4 { 
+        font-size: 15px; 
+        font-weight: 600; 
+        margin: 0; 
+        color: var(--text-dark); 
+    }
+    .item-details p { 
+        font-size: 12px; 
+        color: var(--text-muted); 
+        margin: 3px 0 0 0; 
+    }
+    .item-amount { 
+        font-size: 16px; 
+        font-weight: 700; 
+        color: var(--profit-color); /* Warna Keuntungan (Hijau) */
+    }
+
+    /* EMPTY STATE */
+    .empty-state-list {
+        text-align: center; padding: 30px 20px;
+        background-color: var(--bg-page);
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    .empty-state-list i { 
+        font-size: 30px; 
+        color: var(--primary-green); 
+        margin-bottom: 10px; 
+    }
+    .empty-state-list p {
+        color: var(--text-muted);
+        font-size: 14px;
+    }
+</style>
+</head>
+
+<body>
+<div class="app-container">
+
+    <header class="profit-header">
+        <button class="back-button" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2>Catatan Keuntungan</h2>
+    </header>
+
+    <div class="main-content">
+
+        <div class="total-summary-card">
+            <div class="label">Total Pendapatan Akumulasi</div>
+            <div class="amount" id="totalAmount">Rp 0</div>
+
+            <div class="daily-summary">
+                <div class="daily-item">
+                    <h4>Pendapatan Hari Ini</h4>
+                    <p id="todayProfit">Rp 0</p>
+                </div>
+                <div class="daily-item">
+                    <h4>Pendapatan Kemarin</h4>
+                    <p id="weekProfit">Rp 0</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="list-title">Riwayat Detail Transaksi</div>
+
+        <div class="profit-record-list" id="profit-list"></div>
+
+    </div>
+</div>
+
+<script>
+// === SCRIPT TIDAK DIUBAH SAMA SEKALI ===
+document.addEventListener('DOMContentLoaded', function() {
+
+    const profitListEl = document.getElementById('profit-list');
+    const totalAmountEl = document.getElementById('totalAmount');
+    const todayProfitEl = document.getElementById('todayProfit');
+    const yesterdayProfitEl = document.getElementById('weekProfit');
+
+    // Ambil data user dari localStorage (jika ada)
+    let userData = JSON.parse(localStorage.getItem('userData')) || {};
+
+    // Jika user baru, set registeredAt
+    if (!userData.registeredAt) {
+        const now = new Date();
+        userData.registeredAt = now.toISOString();
+        userData.transactions = [];
+    }
+
+    // Pastikan bonus registrasi tercatat
+    const bonusExists = (userData.transactions || []).some(tx => tx.title === "Bonus Registrasi");
+    if (!bonusExists) {
+        userData.transactions.unshift({
+            title: "Bonus Registrasi",
+            source: "Pendaftaran Akun",
+            amount: 10000,
+            time: userData.registeredAt // pakai waktu saat halaman pertama kali dibuka
+        });
+        localStorage.setItem('userData', JSON.stringify(userData));
+    }
+
+    const transactions = userData.transactions || [];
+
+    // Render transaksi
+    if (transactions.length === 0) {
+        profitListEl.innerHTML = `<div class="empty-state-list"><i class="fas fa-info-circle"></i><p>Tidak ada transaksi</p></div>`;
+    } else {
+        profitListEl.innerHTML = '';
+        transactions.forEach(tx => {
+            const txDate = new Date(tx.time);
+            const itemEl = document.createElement('div');
+            itemEl.classList.add('record-item');
+            itemEl.innerHTML = `
+                <div class="item-details">
+                    <h4>${tx.title}</h4>
+                    <p>Sumber: ${tx.source}</p>
+
+                </div>
+                <div class="item-amount">+Rp ${tx.amount.toLocaleString('id-ID')}</div>
+            `;
+            profitListEl.appendChild(itemEl);
+        });
+    }
+
+    // Hitung total, hari ini, dan kemarin
+    const now = new Date();
+    let total = 0, today = 0, yesterday = 0;
+
+    transactions.forEach(tx => {
+        total += tx.amount;
+        const txDate = new Date(tx.time);
+
+        // Hari ini
+        if (txDate.toDateString() === now.toDateString()) today += tx.amount;
+
+        // Kemarin
+        const yesterdayDate = new Date(now);
+        yesterdayDate.setDate(now.getDate() - 1);
+        if (txDate.toDateString() === yesterdayDate.toDateString()) yesterday += tx.amount;
+    });
+
+    totalAmountEl.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+    todayProfitEl.textContent = `Rp ${today.toLocaleString('id-ID')}`;
+    yesterdayProfitEl.textContent = `Rp ${yesterday.toLocaleString('id-ID')}`;
+});
+</script>
+</body>
+</html>

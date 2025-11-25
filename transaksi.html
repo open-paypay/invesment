@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catatan Transaksi - Indoreal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+/* 🌿 === Variabel Tema HIJAU PUTIH (Minimalis Konsisten) === 🌿 */
+:root {
+    --primary-green: #28a745; 
+    --dark-green: #1e7e34; 
+    --light-green: #e6f7eb; 
+    --bg-light: #ffffff; 
+    --bg-page: #F7F7F7; /* Menggunakan latar belakang abu-abu muda untuk halaman */
+    --text-dark: #333333; 
+    --text-muted: #888; 
+    --border-color: #EFEFEF; 
+    --shadow-subtle: 0 4px 8px rgba(0, 0, 0, 0.05);
+    
+    /* Warna Status yang Diperbarui */
+    --success-color: var(--primary-green);
+    --danger-color: #dc3545;
+    --pending-color: #ffc107; /* Kuning untuk menunggu */
+}
+
+body { 
+    font-family: 'Poppins', sans-serif; 
+    background-color: var(--bg-page); 
+    margin: 0; 
+    padding: 0; 
+    min-height: 100vh; 
+    display: flex; 
+    flex-direction: column; 
+    color: var(--text-dark); 
+}
+.app-container { 
+    width: 100%; 
+    max-width: 450px; 
+    margin: 0 auto; 
+    background-color: var(--bg-light); 
+    box-shadow: none; 
+    flex-grow: 1; 
+    display: flex; 
+    flex-direction: column; 
+}
+
+/* HEADER KONSISTEN */
+.page-header { 
+    background: var(--bg-light); 
+    color: var(--text-dark); 
+    padding: 18px 20px; 
+    display: flex; 
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: var(--shadow-subtle);
+    border-bottom: 1px solid var(--border-color);
+}
+.page-header .back-button {
+    background: none; 
+    border: none; 
+    color: var(--text-dark); 
+    font-size: 20px; 
+    cursor: pointer; 
+    position: absolute; 
+    left: 20px; 
+}
+.page-header .page-title {
+    font-size: 20px; 
+    font-weight: 700; 
+    margin: 0 auto; 
+    flex-grow: 1; 
+    text-align: center; 
+    color: var(--dark-green); 
+}
+
+.main-content { 
+    flex-grow: 1; 
+    padding-bottom: 20px; 
+}
+
+/* Tab Navigation */
+.tab-nav {
+    display: flex;
+    background-color: var(--bg-light);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 57px; 
+    z-index: 50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+.tab-button {
+    flex-grow: 1;
+    padding: 15px 10px;
+    text-align: center;
+    font-weight: 600;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    transition: color 0.3s, border-bottom 0.3s;
+    font-size: 14px;
+}
+.tab-button.active {
+    color: var(--primary-green); 
+    border-bottom: 3px solid var(--primary-green);
+    font-weight: 700;
+}
+
+.tab-content {
+    padding: 15px 20px;
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* Transaction Item Card */
+.transaction-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-light);
+    padding: 18px; 
+    border-radius: 12px; 
+    box-shadow: var(--shadow-subtle);
+    margin-bottom: 15px;
+    border-left: 5px solid var(--primary-green); 
+    transition: transform 0.2s;
+}
+
+.transaction-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(40, 167, 69, 0.1);
+}
+
+/* Border Kiri */
+.deposit.transaction-item { border-left-color: var(--primary-green); }
+.withdrawal.transaction-item { border-left-color: var(--danger-color); } 
+
+.transaction-details {
+    flex-grow: 1;
+    /* Penyesuaian terakhir untuk menjaga ruang dari status */
+    padding-right: 15px; 
+}
+.transaction-amount {
+    font-size: 20px; 
+    font-weight: 800; 
+    /* Penyesuaian terakhir untuk kerapian */
+    margin-bottom: 2px;
+}
+.deposit .transaction-amount { color: var(--success-color); }
+.withdrawal .transaction-amount { color: var(--danger-color); }
+
+.transaction-date { 
+    font-size: 13px; 
+    /* Warna dan bobot dari penyesuaian terakhir */
+    color: #666; 
+    font-weight: 400; 
+    padding-top: 3px;
+}
+
+/* Status Badge */
+.transaction-status {
+    font-size: 12px; 
+    font-weight: 700;
+    padding: 6px 10px;
+    border-radius: 6px; 
+    text-align: center;
+    min-width: 70px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.status-success { 
+    background-color: var(--success-green); 
+    color: white; 
+}
+.status-pending { 
+    background-color: var(--pending-color); 
+    color: var(--text-dark); 
+}
+.status-failed { 
+    background-color: var(--danger-color); 
+    color: white; 
+}
+
+.bottom-nav { display: none; }
+</style>
+</head>
+<body>
+<div class="app-container">
+    
+    <header class="page-header">
+        <a href="#" class="back-button" onclick="history.back()"><i class="fas fa-arrow-left"></i></a>
+        <h1 class="page-title">Riwayat Transaksi</h1>
+    </header>
+
+    <div class="main-content">
+        <div class="tab-nav">
+            <div class="tab-button active" data-tab="deposit">Catatan Deposit</div>
+            <div class="tab-button" data-tab="withdrawal">Catatan Penarikan</div>
+        </div>
+
+        <div id="deposit" class="tab-content active"></div>
+        <div id="withdrawal" class="tab-content"></div>
+    </div>
+</div>
+
+<script>
+// ====================================================================================
+// SCRIPT JAVASCRIPT (TIDAK DIUBAH SAMA SEKALI)
+// ====================================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    let activeUser = JSON.parse(localStorage.getItem("activeUser"));
+    if (!activeUser) {
+        window.location.href = "login.html";
+        return;
+    }
+
+    function renderTransactions() {
+        const depositContainer = document.getElementById('deposit');
+        const withdrawalContainer = document.getElementById('withdrawal');
+        depositContainer.innerHTML = '';
+        withdrawalContainer.innerHTML = '';
+
+        const deposits = activeUser.deposits || [];
+        const withdrawals = activeUser.withdrawals || [];
+
+        // Render Deposit
+        if (deposits.length === 0) {
+            depositContainer.innerHTML = `<p style="text-align:center; color:#888; margin-top:20px;">Belum ada transaksi deposit</p>`;
+        } else {
+            deposits.forEach(tx => {
+                const div = document.createElement('div');
+                div.className = 'transaction-item deposit';
+                
+                div.innerHTML = `
+                    <div class="transaction-details">
+                        <div class="transaction-amount">+ Rp ${Number(tx.amount).toLocaleString('id-ID')}</div>
+                        <div class="transaction-date">${tx.date}</div>
+                    </div>
+                    <div class="transaction-status ${tx.status === 'Berhasil' ? 'status-success' : tx.status === 'Menunggu' ? 'status-pending' : 'status-failed'}">${tx.status}</div>
+                `;
+                depositContainer.appendChild(div);
+            });
+        }
+
+        // Render Withdrawal
+        if (withdrawals.length === 0) {
+            withdrawalContainer.innerHTML = `<p style="text-align:center; color:#888; margin-top:20px;">Belum ada transaksi penarikan</p>`;
+        } else {
+            withdrawals.forEach(tx => {
+                const div = document.createElement('div');
+                div.className = 'transaction-item withdrawal';
+                div.innerHTML = `
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp ${Number(tx.amount).toLocaleString('id-ID')}</div>
+                        <div class="transaction-date">${tx.date}</div>
+                    </div>
+                    <div class="transaction-status ${tx.status === 'Berhasil' ? 'status-success' : tx.status === 'Menunggu' ? 'status-pending' : 'status-failed'}">${tx.status}</div>
+                `;
+                withdrawalContainer.appendChild(div);
+            });
+        }
+    }
+
+    // Panggil renderTransactions() saat page load
+    renderTransactions();
+
+    // Tab switch
+    document.querySelectorAll('.tab-button').forEach(button => {
+        button.addEventListener('click', () => {
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            button.classList.add('active');
+            document.getElementById(button.dataset.tab).classList.add('active');
+        });
+    });
+});
+// ====================================================================================
+</script>
+</body>
+</html>

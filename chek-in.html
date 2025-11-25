@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catatan Transaksi - Indoreal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <style>
+        /* Variabel CSS untuk warna */
+        :root {
+            --primary-purple: #8A2BE2; /* Ungu Utama */
+            --light-purple: #210e3f;  /* Ungu lebih terang */
+            --bg-light: #fff;
+            --text-dark: #333;
+            --text-muted: #666;
+            --shadow-light: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --success-green: #28a745;
+            --danger-red: #dc3545;
+            --pending-blue: #007bff;
+        }
+
+        /* Styling Dasar */
+        body { 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--bg-light); 
+            margin: 0; 
+            padding: 0; 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            color: var(--text-dark); 
+        }
+        .app-container { 
+            width: 100%; 
+            max-width: 450px; 
+            margin: 0 auto; 
+            background-color: #fff; 
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        .header { 
+            background: linear-gradient(to right, var(--primary-purple), var(--light-purple)); color: var(--text-light); padding: 15px 20px; display: flex; align-items: center;
+            color: white;
+          
+        }        
+        .header .back-button {
+            background: none; 
+          border: none; 
+          color: white; 
+          font-size: 20px; 
+          cursor: pointer; 
+          position: absolute; 
+          left: 15px; }
+        .header .page-title {
+            font-size: 18px; font-weight: 600; margin: 0; flex-grow: 1; text-align: center; }
+        }
+        .main-content { 
+            padding: 0; /* Padding dihilangkan karena tab sudah ada border */
+            flex-grow: 1; 
+            padding-bottom: 60px; /* Ruang untuk nav bawah */
+        }
+        
+        /* === Tab Navigasi === */
+        .tab-nav {
+            display: flex;
+            background-color: #fff;
+            border-bottom: 2px solid #eee;
+            position: sticky; /* Agar tetap di atas saat scroll */
+            top: 0;
+            z-index: 10;
+        }
+        .tab-button {
+            flex-grow: 1;
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: color 0.3s, border-bottom 0.3s;
+        }
+        .tab-button.active {
+            color: var(--primary-purple);
+            border-bottom: 3px solid var(--primary-purple);
+        }
+
+        /* === Konten Tab (Riwayat) === */
+        .tab-content {
+            padding: 15px 20px;
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* === Item Riwayat Transaksi === */
+        .transaction-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: var(--shadow-light);
+            margin-bottom: 10px;
+            border-left: 5px solid var(--primary-purple);
+        }
+
+        .transaction-details {
+            flex-grow: 1;
+        }
+        .transaction-amount {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+        .deposit .transaction-amount {
+            color: var(--success-green);
+        }
+        .withdrawal .transaction-amount {
+            color: var(--danger-red);
+        }
+        .transaction-date {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .transaction-status {
+            font-size: 14px;
+            font-weight: 600;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .status-success {
+            background-color: var(--success-green);
+            color: white;
+        }
+        .status-pending {
+            background-color: var(--pending-blue);
+            color: white;
+        }
+        .status-failed {
+            background-color: var(--danger-red);
+            color: white;
+        }
+
+        /* Navigasi Bawah (Opsional, tergantung dari konteks aplikasi penuh) */
+        .bottom-nav { 
+            display: flex; justify-content: space-around; align-items: center; 
+            height: 60px; background-color: #fff; 
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1); 
+            position: fixed; bottom: 0; width: 100%; 
+            max-width: 450px; margin: 0 auto; 
+            border-top: 1px solid #eee; z-index: 100; 
+        }
+        .nav-item { 
+            display: flex; flex-direction: column; align-items: center; 
+            text-decoration: none; color: var(--text-muted); 
+            font-size: 10px; font-weight: 500; padding: 5px; 
+            transition: color 0.3s; 
+        }
+        .nav-item i { font-size: 20px; margin-bottom: 3px; }
+        .nav-item.active { color: var(--primary-purple); }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <header class="header">
+            <a href="#" class="back-button" onclick="history.back()"><i class="fas fa-arrow-left"></i></a>
+            <h1 class="page-title">Riwayat Transaksi</h1>
+        </header>
+
+        <div class="main-content">
+            <div class="tab-nav">
+                <div class="tab-button active" data-tab="deposit">Catatan Deposit</div>
+                <div class="tab-button" data-tab="withdrawal">Catatan Penarikan</div>
+            </div>
+
+            <div id="deposit" class="tab-content active">
+                <div class="transaction-item deposit">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">+ Rp 5.000.000</div>
+                        <div class="transaction-date">15 Oktober 2025, 14:30 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+                <div class="transaction-item deposit">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">+ Rp 1.000.000</div>
+                        <div class="transaction-date">10 Oktober 2025, 09:15 WIB</div>
+                    </div>
+                    <div class="transaction-status status-pending">Menunggu</div>
+                </div>
+                <div class="transaction-item deposit">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">+ Rp 2.500.000</div>
+                        <div class="transaction-date">01 Oktober 2025, 18:00 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+                <div class="transaction-item deposit">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">+ Rp 500.000</div>
+                        <div class="transaction-date">25 September 2025, 11:45 WIB</div>
+                    </div>
+                    <div class="transaction-status status-failed">Gagal</div>
+                </div>
+                </div>
+
+            <div id="withdrawal" class="tab-content">
+                        <div class="transaction-item withdrawal">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp 589.000</div>
+                        <div class="transaction-date">07 November 2025, 08:58 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+            <div class="transaction-item withdrawal">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp 710.000</div>
+                        <div class="transaction-date">06 November 2025, 12:11 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+            <div class="transaction-item withdrawal">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp 1.200.000</div>
+                        <div class="transaction-date">05 November 2025, 20:41 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+                <div class="transaction-item withdrawal">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp 860.000</div>
+                        <div class="transaction-date">04 November 2025, 17:46 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+                <div class="transaction-item withdrawal">
+                    <div class="transaction-details">
+                        <div class="transaction-amount">- Rp 76.000</div>
+                        <div class="transaction-date">04 November 2025, 12:17 WIB</div>
+                    </div>
+                    <div class="transaction-status status-success">Berhasil</div>
+                </div>
+               
+                </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabButtons = document.querySelectorAll('.tab-button');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            tabButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // Hapus kelas 'active' dari semua tombol dan konten
+                    tabButtons.forEach(btn => btn.classList.remove('active'));
+                    tabContents.forEach(content => content.classList.remove('active'));
+
+                    // Tambahkan kelas 'active' ke tombol yang diklik
+                    button.classList.add('active');
+
+                    // Tampilkan konten yang sesuai
+                    const targetTab = button.getAttribute('data-tab');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>
